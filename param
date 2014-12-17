@@ -1,10 +1,10 @@
 #All
-nbPath="~/.newsbeuterCS/"
+nbPath="~/newsbeuterCS/"
 
 #Client
-sshUser=ubuntu              
-server=15.126.254.114       
-ncPort=4242                 
-browserCmd=firefox          
+sshUser=
+server=
+ncPort=
+browserCmd=firefox
 
 #Server

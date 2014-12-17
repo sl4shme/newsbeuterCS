@@ -1,6 +1,6 @@
 #!/bin/bash
 
-execPath=${0%/*}      
+execPath=${0%/*}
 source $execPath/param
 
 urlFile=$nbPath/toOpen
