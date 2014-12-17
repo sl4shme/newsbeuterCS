@@ -1,10 +1,9 @@
 clientPath="$HOME/newsbeuterCS"
 serverPath="/home/ubuntu/newsbeuterCS"
 
-tmuxName=neuwsbeuter
+tmuxName=newsbeuter
 
-sshUser=
+sshUser=ubuntu
 server=
 ncPort=
 browserCmd=firefox
-
