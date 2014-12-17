@@ -1,4 +1,4 @@
 #!/bin/bash
 execPath=${0%/*}
 source $execPath/param
-echo $1 >> $nbPath/toOpen
+echo $1 >> $serverPath/toOpen

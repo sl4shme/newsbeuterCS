@@ -3,7 +3,7 @@
 execPath=${0%/*}
 source $execPath/param
 
-urlFile=$nbPath/toOpen
+urlFile=$clientPath/toOpen
 
 if [ "$http_proxy" != "" ]; then
     prefix="http://"
@@ -16,7 +16,7 @@ function retrieve {
     code=$?
     okay=${get: -2}
     get=${get:0:-3}
-    if [ $code = "0" ]; then
+    if [ "$code" = "0" ]; then
         if [ "$okay" = "OK" ]; then
             echo "$get" >> $urlFile
             echo OK | netcat $ncProxy $server $ncPort -w 1
@@ -32,31 +32,34 @@ function retrieve {
 
 function checkFile {
     numLine=`cat $urlFile | wc -l`
-    echo "You have $numLine links waiting to be opened."
-    answOk=0
-    while [ $answOk = "0" ]; do
-        echo "Do you want to (O)pen them in you browser, (e)dit them, (d)elete them or (k)keep them and continue ? (o)?"
-        read answ
-        case $answ in
-           ""| o|O)
-                answOk=1
-                open
-            ;;
-            e|E)
-                $EDITOR $urlFile
-            ;;
-            d|D)
-                answOk=1
-                > $urlFile
-            ;;
-            k|K)
-                answOk=1
-            ;;
-            *)
-                echo "Wrong choice."
-            ;;
-        esac
-    done
+    if [ "$numLine" != "0" ]; then
+        echo "You have $numLine links waiting to be opened."
+        answOk=0
+        while [ "$answOk" = "0" ]; do
+            echo "Do you want to (O)pen them in you browser, (e)dit them, (d)elete them or (k)keep them and continue ? (o)?"
+            read answ
+            case $answ in
+               ""| o|O)
+                    answOk=1
+                    open
+                ;;
+                e|E)
+                    answOk=1
+                    $EDITOR $urlFile
+                ;;
+                d|D)
+                    answOk=1
+                    > $urlFile
+                ;;
+                k|K)
+                    answOk=1
+                ;;
+                *)
+                    echo "Wrong choice."
+                ;;
+            esac
+        done
+    fi
 }
 
 function open {
@@ -82,7 +85,7 @@ if [ "$oldUrls" != "1" ]; then
 fi
 
 #Open Newsbeuter on the server
-ssh "$sshUser@$server" -t "$nbPath/wrapper"
+ssh "$sshUser@$server" -t "$serverPath/wrapper"
 
 #Retrieve links
 newUrls=`retrieve`

@@ -7,4 +7,4 @@ newsbeuter
 # Start the tmux session for the sender
 tmux new-session -d -s $tmuxName
 tmux select-pane -t $tmuxName
-tmux send-keys "$nbPath/sender &" C-m
+tmux send-keys "$serverPath/sender &" C-m
