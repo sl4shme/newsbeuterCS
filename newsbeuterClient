@@ -1,0 +1,93 @@
+#!/bin/bash
+
+execPath=${0%/*}      
+source $execPath/param
+
+urlFile=$nbPath/toOpen
+
+if [ "$http_proxy" != "" ]; then
+    prefix="http://"
+    ncProxy=${http_proxy#$prefix}
+    ncProxy=" -X connect -x "$ncProxy
+fi
+
+function retrieve {
+    get=`netcat $ncProxy $server $ncPort -w 1`
+    code=$?
+    okay=${get: -2}
+    get=${get:0:-3}
+    if [ $code = "0" ]; then
+        if [ "$okay" = "OK" ]; then
+            echo "$get" >> $urlFile
+            echo OK | netcat $ncProxy $server $ncPort -w 1
+            echo "$get"
+        else
+            >&2 echo "Error during transaction with server."
+            echo "1"
+        fi
+    else
+        echo "1"
+    fi
+}
+
+function checkFile {
+    numLine=`cat $urlFile | wc -l`
+    echo "You have $numLine links waiting to be opened."
+    answOk=0
+    while [ $answOk = "0" ]; do
+        echo "Do you want to (O)pen them in you browser, (e)dit them, (d)elete them or (k)keep them and continue ? (o)?"
+        read answ
+        case $answ in
+           ""| o|O)
+                answOk=1
+                open
+            ;;
+            e|E)
+                $EDITOR $urlFile
+            ;;
+            d|D)
+                answOk=1
+                > $urlFile
+            ;;
+            k|K)
+                answOk=1
+            ;;
+            *)
+                echo "Wrong choice."
+            ;;
+        esac
+    done
+}
+
+function open {
+    while read line
+    do
+        concat="$concat $line"
+    done < $urlFile
+    $browserCmd $concat
+    > $urlFile
+}
+
+
+
+
+
+#Check for old locally stored links
+checkFile
+
+#Check for old remotly stored links
+oldUrls=`retrieve`
+if [ "$oldUrls" != "1" ]; then
+    checkFile
+fi
+
+#Open Newsbeuter on the server
+ssh "$sshUser@$server" -t "$nbPath/wrapper"
+
+#Retrieve links
+newUrls=`retrieve`
+if [ "$newUrls" != "1" ]; then
+    checkFile
+else
+    echo "No link retrieved, exiting."
+fi

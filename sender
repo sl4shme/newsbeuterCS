@@ -1,0 +1,18 @@
+#!/bin/bash                                                                       
+execPath=${0%/*}      
+source $execPath/param
+
+
+#Read and send
+urls=`cat $nbPath/toOpen ; echo OK`
+echo "$urls" | netcat -n -l $ncPort 
+
+#Try to get Ack
+(sleep 2 ; pkill -f "netcat -l -n $ncPort") &
+resp=`netcat -l -n $ncPort`
+if [ "$resp" = "OK" ]; then
+	>$nbPath/toOpen
+fi	
+
+#Close tmux session
+tmux kill-session -t $tmuxName

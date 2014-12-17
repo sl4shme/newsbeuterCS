@@ -1,0 +1,4 @@
+#!/bin/bash
+execPath=${0%/*}
+source $execPath/param
+echo $1 >> $nbPath/toOpen
