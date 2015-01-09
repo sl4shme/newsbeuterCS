@@ -12,12 +12,12 @@ if [ "$http_proxy" != "" ]; then
 fi
 
 function retrieve {
-    get=`netcat $ncProxy $server $ncPort -w 1`
+    get=`netcat $ncProxy $server $ncPort -w 1 2> /dev/null`
     code=$?
     okay=${get: -2}
-    get=${get:0:-3}
     if [ "$code" = "0" ]; then
         if [ "$okay" = "OK" ]; then
+            get=${get:0:-3}
             echo "$get" >> $urlFile
             echo OK | netcat $ncProxy $server $ncPort -w 1
             echo "$get"
@@ -67,7 +67,7 @@ function open {
     do
         concat="$concat $line"
     done < $urlFile
-    $browserCmd $concat
+    $browserCmd $concat 2> /dev/null
     > $urlFile
 }
 
