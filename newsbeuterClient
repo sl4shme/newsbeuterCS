@@ -1,6 +1,6 @@
 #!/bin/bash
 
-execPath=${0%/*}
+execPath=$HOME/.newsbeuterCS
 source $execPath/param
 
 urlFile=$clientPath/toOpen
@@ -85,7 +85,7 @@ if [ "$oldUrls" != "1" ]; then
 fi
 
 #Open Newsbeuter on the server
-ssh "$sshUser@$server" -t "$serverPath/wrapper"
+ssh "$sshUser@$server" -t "export TERM=xterm-256color ; $serverPath/wrapper"
 
 #Retrieve links
 newUrls=`retrieve`
