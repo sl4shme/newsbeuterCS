@@ -85,7 +85,7 @@ if [ "$oldUrls" != "1" ]; then
 fi
 
 #Open Newsbeuter on the server
-ssh "$sshUser@$server" -t "export TERM=xterm-256color ; $serverPath/wrapper"
+ssh "$sshUser@$server" -t "export LANG=en_US.UTF-8 ; export TERM=xterm-256color ; $serverPath/wrapper"
 
 #Retrieve links
 newUrls=`retrieve`

@@ -2,7 +2,7 @@
 execPath=${0%/*}
 source $execPath/param
 
-newsbeuter
+newsbeuter -r
 
 # Start the tmux session for the sender
 tmux new-session -d -s $tmuxName
